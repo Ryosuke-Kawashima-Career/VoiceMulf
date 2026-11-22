@@ -15,6 +15,8 @@ interface Props {
   progress?: number;
   nextManeuver?: number;
   zone?: boolean;
+  /** Changes when places are added to the route; the map is redrawn to show their pins. */
+  placesVersion?: number;
 }
 
 interface Layers {
@@ -41,7 +43,7 @@ function useNow(intervalMs: number) {
 }
 
 /** Real street map (OpenStreetMap tiles via Leaflet), spec 4.1 route preview and 4.2 map panel. */
-export function MapPanel({ route, lang, variant, progress = 0, nextManeuver = -1, zone = false }: Props) {
+export function MapPanel({ route, lang, variant, progress = 0, nextManeuver = -1, zone = false, placesVersion = 0 }: Props) {
   const el = useRef<HTMLDivElement>(null);
   const layers = useRef<Layers | null>(null);
   const [ready, setReady] = useState(false);
@@ -99,7 +101,7 @@ export function MapPanel({ route, lang, variant, progress = 0, nextManeuver = -1
       setReady(false);
       map?.remove();
     };
-  }, [route, lang, drive]);
+  }, [route, lang, drive, placesVersion]);
 
   // The drive starts in overview, then follows the car (spec 4.2).
   useEffect(() => {

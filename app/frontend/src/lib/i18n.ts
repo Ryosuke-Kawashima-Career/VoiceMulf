@@ -12,6 +12,8 @@ export interface HostPhrases {
   skipping: string;
   closing: string;
   noMore: string;
+  /** Spoken when the Voice AI Agent is unavailable. */
+  agentFallback: string;
   /** Early navigation instruction, spoken 800 m before a turn. */
   navAhead: (instruction: string) => string;
 }
@@ -29,6 +31,7 @@ export const PHRASES: Record<Lang, HostPhrases> = {
     skipping: "ठीक है, इसे छोड़ते हैं।",
     closing: "खेलने के लिए शुक्रिया! सुरक्षित सफ़र।",
     noMore: "आज के सवाल खत्म हो गए।",
+    agentFallback: "माफ़ कीजिए, मैं ठीक से समझ नहीं पाई।",
     navAhead: (t) => `800 मीटर बाद, ${t}`,
   },
   "ta-IN": {
@@ -43,6 +46,7 @@ export const PHRASES: Record<Lang, HostPhrases> = {
     skipping: "சரி, இதை விட்டுவிடலாம்.",
     closing: "விளையாடியதற்கு நன்றி! பாதுகாப்பான பயணம்.",
     noMore: "இன்றைய கேள்விகள் முடிந்துவிட்டன.",
+    agentFallback: "மன்னிக்கவும், எனக்குச் சரியாகப் புரியவில்லை.",
     navAhead: (t) => `800 மீட்டரில், ${t}`,
   },
   "en-IN": {
@@ -57,6 +61,7 @@ export const PHRASES: Record<Lang, HostPhrases> = {
     skipping: "Okay, let's skip this one.",
     closing: "Thanks for playing! Drive safe.",
     noMore: "That's all the questions for today.",
+    agentFallback: "Sorry, I didn't catch that.",
     navAhead: (t) => `In 800 metres, ${t.charAt(0).toLowerCase()}${t.slice(1)}`,
   },
 };

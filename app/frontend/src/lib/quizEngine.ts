@@ -16,7 +16,8 @@ import { judge } from "./judge";
 import { pathDistances, Replay, snapToRoute, type Speed } from "./replay";
 import { Listener } from "./stt";
 import { HostVoice, type VoiceSource } from "./tts";
-import type { Lang, Question, Route } from "./types";
+import { formatClock } from "./format";
+import type { Landmark, Lang, Question, Region, Route } from "./types";
 
 /** Distances and timings (spec 5.2: "distances are settings and may be tuned"). */
 export const SETTINGS = {
@@ -33,16 +34,19 @@ export const SETTINGS = {
   gpsBehindM: 200,
   gpsAheadM: 3000,
   gpsMaxOffRouteM: 100,
+  /** The frontend gives up on the Voice AI Agent after this long and speaks a fallback line. */
+  agentTimeoutMs: 8000,
+  generatedTriviaCount: 5,
   listenMs: 8000,
   nextRoundGapMs: 4000,
 };
 
-export type Phase = "IDLE" | "OFFER" | "ASK" | "LISTEN" | "JUDGE" | "FEEDBACK" | "FACT" | "PAUSED" | "ENDED";
+export type Phase = "IDLE" | "OFFER" | "ASK" | "LISTEN" | "JUDGE" | "FEEDBACK" | "FACT" | "AGENT" | "PAUSED" | "ENDED";
 export type ItemStatus = "pending" | "asked" | "correct" | "dropped";
 
 export interface DebugEntry {
   at: number;
-  kind: "stt" | "typed" | "match" | "command" | "voice" | "played" | "held" | "dropped";
+  kind: "stt" | "typed" | "match" | "command" | "voice" | "played" | "held" | "dropped" | "agent";
   text: string;
 }
 
@@ -69,6 +73,8 @@ export interface Snapshot {
   region: number;
   landmarkStatus: ItemStatus[];
   regionStatus: ItemStatus[];
+  /** Bumped when the Voice AI Agent adds places to the route. */
+  placesVersion: number;
 }
 
 type Kind = "trivia" | "landmark" | "region";
@@ -131,6 +137,7 @@ export class QuizEngine {
       region: -1,
       landmarkStatus: route?.landmarks.map(() => "pending") ?? [],
       regionStatus: route?.regions.map(() => "pending") ?? [],
+      placesVersion: 0,
     };
     this.voice.onSource = (src, info) => {
       if (info) this.log("voice", `${src === "browser" ? "browser voice fallback" : "Murf"}: ${info}`);
@@ -168,6 +175,104 @@ export class QuizEngine {
     return this.questions.find((q) => q.id === id);
   }
 
+  // ---------- Voice AI Agent (backend spec 4) ----------
+
+  /** Live trip state sent with trip questions. */
+  private tripSnapshot() {
+    const r = this.route;
+    if (!r) return null;
+    const lang = this.s.lang;
+    const p = this.s.progress;
+    const remaining = Math.max(0, r.length_m - p);
+    const remainingS = r.length_m ? (r.duration_s * remaining) / r.length_m : 0;
+    const next = this.s.nextManeuver >= 0 ? r.maneuvers[this.s.nextManeuver] : null;
+    const landmark = r.landmarks.find((l) => l.at_m > p);
+    return {
+      destination: r.name[lang],
+      remaining_m: Math.round(remaining),
+      remaining_s: Math.round(remainingS),
+      arrival_time: formatClock(Date.now() + remainingS * 1000),
+      next_maneuver: next ? { text: next.text[lang], distance_m: Math.round(next.at_m - p) } : null,
+      region: this.s.region >= 0 ? r.regions[this.s.region].name[lang] : null,
+      next_landmark: landmark ? { name: landmark.name[lang], distance_m: Math.round(landmark.at_m - p) } : null,
+    };
+  }
+
+  /** Background: places along the route + generated questions (runs after Start). */
+  private async loadGeneratedQuiz() {
+    try {
+      const res = await fetch("/api/agent/quiz", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          language: this.s.lang,
+          path: this.route?.path ?? null,
+          trivia_count: SETTINGS.generatedTriviaCount,
+        }),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const j = (await res.json()) as {
+        landmarks: Landmark[];
+        regions: Region[];
+        questions: Question[];
+        stats: { places_source: string; ms: number; agent_error: string | null };
+      };
+      if (this.s.phase === "ENDED") return;
+      this.questions.push(...j.questions);
+      if (this.route) this.addRoutePlaces(j.landmarks, j.regions);
+      this.log(
+        "agent",
+        `quiz ready in ${Math.round(j.stats.ms / 1000)} s: ${j.questions.length} questions, +${j.landmarks.length} landmarks, +${j.regions.length} regions (places: ${j.stats.places_source})` +
+          (j.stats.agent_error ? ` · agent error: ${j.stats.agent_error}` : ""),
+      );
+    } catch (e) {
+      this.log("agent", `quiz generation failed: ${String(e)}`);
+    }
+  }
+
+  private addRoutePlaces(landmarks: Landmark[], regions: Region[]) {
+    const r = this.route!;
+    if (!landmarks.length && !regions.length) return;
+    const oldL = new Map(r.landmarks.map((l, i) => [l, this.s.landmarkStatus[i]] as const));
+    const oldR = new Map(r.regions.map((g, i) => [g, this.s.regionStatus[i]] as const));
+    r.landmarks = [...r.landmarks, ...landmarks].sort((a, b) => a.at_m - b.at_m);
+    r.regions = [...r.regions, ...regions].sort((a, b) => a.enter_at_m - b.enter_at_m);
+    let region = -1;
+    r.regions.forEach((g, i) => {
+      if (this.s.progress >= g.enter_at_m) region = i;
+    });
+    this.set({
+      landmarkStatus: r.landmarks.map((l) => oldL.get(l) ?? "pending"),
+      regionStatus: r.regions.map((g) => oldR.get(g) ?? "pending"),
+      region,
+      placesVersion: this.s.placesVersion + 1,
+    });
+  }
+
+  /** Asks the agent about a driver utterance that is not a command or a quiz answer. */
+  private async askAgent(t: number, utterance: string): Promise<{ intent: string; reply: string }> {
+    const ctl = new AbortController();
+    const timer = setTimeout(() => ctl.abort(), SETTINGS.agentTimeoutMs);
+    const t0 = Date.now();
+    try {
+      const res = await fetch("/api/agent/turn", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ language: this.s.lang, utterance, trip: this.tripSnapshot() }),
+        signal: ctl.signal,
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const j = (await res.json()) as { intent: string; reply: string };
+      if (this.alive(t)) this.log("agent", `${j.intent} (${Date.now() - t0} ms): ${j.reply}`);
+      return j;
+    } catch (e) {
+      if (this.alive(t)) this.log("agent", `failed after ${Date.now() - t0} ms: ${String(e)}`);
+      return { intent: "other", reply: this.P.agentFallback };
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
   // ---------- public controls ----------
 
   /** Call from the Start button click (unlocks audio). */
@@ -184,6 +289,7 @@ export class QuizEngine {
       this.startGps();
     }
     if (!this.alive(t)) return;
+    void this.loadGeneratedQuiz();
     this.set({ phase: "OFFER", startedAt: Date.now() });
     // Anything already due at the start point (e.g. a turn right after departure) fires now.
     if (this.route) this.onMove(-1e9, 0, false);
@@ -424,6 +530,7 @@ export class QuizEngine {
       return this.endRound();
     }
     if (phase === "FEEDBACK" || phase === "FACT") return this.endRound();
+    if (phase === "AGENT") return this.go("IDLE");
     if (phase === "IDLE") return this.go("IDLE", { nextRound: this.nextRoundDue });
     if (phase === "OFFER" || phase === "PAUSED") return this.go(phase);
   }
@@ -536,6 +643,7 @@ export class QuizEngine {
     const P = this.P;
     switch (phase) {
       case "IDLE": {
+        if (this.queue.length && !this.active && this.tryQueue()) return;
         if (arg.nextRound) {
           // Next round after a short gap, unless a route item or a command takes over first.
           void sleep(SETTINGS.nextRoundGapMs).then(() => {
@@ -543,8 +651,11 @@ export class QuizEngine {
           });
         }
         const r = await this.listenFor(t, 0);
-        if (r.kind === "text" && parseYesNo(r.text, this.s.lang) === "yes") this.go("OFFER");
-        else if (r.kind === "text") this.go("IDLE");
+        if (r.kind !== "text") return;
+        const yn = parseYesNo(r.text, this.s.lang);
+        if (yn === "yes") this.go("OFFER");
+        else if (yn === "no") this.go("IDLE");
+        else this.go("AGENT", { text: r.text });
         return;
       }
 
@@ -553,8 +664,12 @@ export class QuizEngine {
         if (!(await this.quizSpeak(t, P.offer))) return;
         const r = await this.listenFor(t, SETTINGS.listenMs);
         if (r.kind === "stale") return;
-        if (r.kind === "text" && parseYesNo(r.text, this.s.lang) === "yes") return this.go("ASK", { newTrivia: true });
-        return this.go("IDLE"); // no, unclear or silence: go quiet
+        if (r.kind === "text") {
+          const yn = parseYesNo(r.text, this.s.lang);
+          if (yn === "yes") return this.go("ASK", { newTrivia: true });
+          if (yn === null) return this.go("AGENT", { text: r.text }); // a question for the co-driver
+        }
+        return this.go("IDLE"); // no or silence: go quiet
       }
 
       case "ASK": {
@@ -622,6 +737,15 @@ export class QuizEngine {
         const q = arg.q as Question;
         if (!(await this.quizSpeak(t, `${P.quickFact} ${q.fun_fact}`))) return;
         return this.endRound();
+      }
+
+      case "AGENT": {
+        const out = await this.askAgent(t, String(arg.text ?? ""));
+        if (!this.alive(t)) return;
+        // The reply answers the driver, so it may play in the directions-first zone (directions still interrupt it).
+        if (!(await this.quizSpeak(t, out.reply, true))) return;
+        if (out.intent === "start_quiz") return this.go("ASK", { newTrivia: true });
+        return this.go("IDLE");
       }
 
       case "PAUSED": {

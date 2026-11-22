@@ -1,0 +1,369 @@
+[
+  {
+    "place_id": null,
+    "place_name": null,
+    "language": "hi-IN",
+    "created_at": "2026-11-22T08:30:42.458Z",
+    "model_output": {
+      "place_id": null,
+      "type": "trivia",
+      "prompt": "उन्नीस सौ तिरासी में भारत को पहला क्रिकेट विश्व कप किस कप्तान ने जिताया था?",
+      "clues": [],
+      "answers": [
+        "कपिल देव",
+        "Kapil Dev",
+        "कपिल",
+        "Kapil"
+      ],
+      "fun_fact": "फ़ाइनल में भारत ने लॉर्ड्स के मैदान पर वेस्ट इंडीज़ को हराया था।",
+      "welcome": null,
+      "greeting": null
+    }
+  },
+  {
+    "place_id": null,
+    "place_name": null,
+    "language": "hi-IN",
+    "created_at": "2026-11-22T08:30:42.458Z",
+    "model_output": {
+      "place_id": null,
+      "type": "trivia",
+      "prompt": "फ़िल्म शोले में गब्बर सिंह का किरदार किस अभिनेता ने निभाया था?",
+      "clues": [],
+      "answers": [
+        "अमजद ख़ान",
+        "अमजद खान",
+        "Amjad Khan",
+        "Amjad"
+      ],
+      "fun_fact": "गब्बर का डायलॉग 'कितने आदमी थे' आज भी हिंदी सिनेमा के सबसे मशहूर संवादों में गिना जाता है।",
+      "welcome": null,
+      "greeting": null
+    }
+  },
+  {
+    "place_id": null,
+    "place_name": null,
+    "language": "hi-IN",
+    "created_at": "2026-11-22T08:30:42.458Z",
+    "model_output": {
+      "place_id": null,
+      "type": "trivia",
+      "prompt": "सफ़ेद पेठे की मिठाई के लिए उत्तर प्रदेश का कौन सा शहर सबसे मशहूर है?",
+      "clues": [],
+      "answers": [
+        "आगरा",
+        "Agra"
+      ],
+      "fun_fact": "पेठा कद्दू जैसी सब्ज़ी, सफ़ेद पेठे से बनाया जाता है।",
+      "welcome": null,
+      "greeting": null
+    }
+  },
+  {
+    "place_id": null,
+    "place_name": null,
+    "language": "hi-IN",
+    "created_at": "2026-11-22T08:30:42.458Z",
+    "model_output": {
+      "place_id": null,
+      "type": "trivia",
+      "prompt": "भारत के भीतर बहने वाली सबसे लंबी नदी कौन सी है?",
+      "clues": [],
+      "answers": [
+        "गंगा",
+        "Ganga",
+        "Ganges"
+      ],
+      "fun_fact": "गंगा उत्तराखंड में गंगोत्री ग्लेशियर से निकलती है।",
+      "welcome": null,
+      "greeting": null
+    }
+  },
+  {
+    "place_id": null,
+    "place_name": null,
+    "language": "hi-IN",
+    "created_at": "2026-11-22T08:30:42.458Z",
+    "model_output": {
+      "place_id": null,
+      "type": "trivia",
+      "prompt": "भारत का राष्ट्रीय पशु कौन सा है?",
+      "clues": [],
+      "answers": [
+        "बाघ",
+        "Bagh",
+        "टाइगर",
+        "Tiger",
+        "शेर"
+      ],
+      "fun_fact": "दुनिया के आधे से ज़्यादा जंगली बाघ भारत में रहते हैं।",
+      "welcome": null,
+      "greeting": null
+    }
+  },
+  {
+    "place_id": null,
+    "place_name": null,
+    "language": "hi-IN",
+    "created_at": "2026-11-22T08:32:22.115Z",
+    "model_output": {
+      "place_id": null,
+      "type": "trivia",
+      "prompt": "क्रिकेट में 'मास्टर ब्लास्टर' के नाम से कौन सा भारतीय बल्लेबाज़ मशहूर है?",
+      "clues": [],
+      "answers": [
+        "सचिन तेंदुलकर",
+        "सचिन",
+        "तेंदुलकर",
+        "Sachin Tendulkar",
+        "Sachin",
+        "Tendulkar"
+      ],
+      "fun_fact": "सचिन तेंदुलकर ने अंतरराष्ट्रीय क्रिकेट में सौ शतक लगाए हैं।",
+      "welcome": null,
+      "greeting": null
+    }
+  },
+  {
+    "place_id": null,
+    "place_name": null,
+    "language": "hi-IN",
+    "created_at": "2026-11-22T08:32:22.115Z",
+    "model_output": {
+      "place_id": null,
+      "type": "trivia",
+      "prompt": "भारत की सबसे लंबी नदी कौन सी है?",
+      "clues": [],
+      "answers": [
+        "गंगा",
+        "गंगा नदी",
+        "Ganga",
+        "Ganges",
+        "Ganga River"
+      ],
+      "fun_fact": "गंगा नदी उत्तराखंड के गंगोत्री ग्लेशियर से निकलती है।",
+      "welcome": null,
+      "greeting": null
+    }
+  },
+  {
+    "place_id": "osm_relation_14934834",
+    "place_name": "Kolar Gold Field",
+    "language": "ta-IN",
+    "created_at": "2026-11-22T08:37:53.391Z",
+    "model_output": {
+      "place_id": "osm_relation_14934834",
+      "type": "landmark",
+      "prompt": "நாம் இப்போது நெருங்கும் ஊரில், ஒரு காலத்தில் உலகின் மிக ஆழமான சுரங்கங்களில் சில இருந்தன. அங்கே எந்த உலோகம் தோண்டி எடுக்கப்பட்டது?",
+      "clues": [
+        "யஷ் நடித்த 'கே.ஜி.எஃப்' திரைப்படம் இந்த ஊரின் பெயரைக் கொண்டது.",
+        "இது மஞ்சள் நிறத்தில் மின்னும், நகை செய்யப் பயன்படும் விலை உயர்ந்த உலோகம்."
+      ],
+      "answers": [
+        "தங்கம்",
+        "Thangam",
+        "Gold",
+        "கோல்டு",
+        "தங்கம் உலோகம்"
+      ],
+      "fun_fact": "கோலார் தங்க வயல் சுரங்கங்கள் 2001 ஆம் ஆண்டு மூடப்பட்டன.",
+      "welcome": null,
+      "greeting": null
+    }
+  },
+  {
+    "place_id": "osm_relation_10325947",
+    "place_name": "Arakkonam",
+    "language": "ta-IN",
+    "created_at": "2026-11-22T08:37:53.391Z",
+    "model_output": {
+      "place_id": "osm_relation_10325947",
+      "type": "landmark",
+      "prompt": "இந்திய கடற்படையின் பெரிய விமானத் தளமான ஐ.என்.எஸ். ராஜாளி அமைந்துள்ள ஊர் எது?",
+      "clues": [
+        "இது சென்னைக்கு மேற்கே உள்ள முக்கியமான ரயில் சந்திப்பு; சென்னை புறநகர் ரயில்கள் இங்கு வரை வரும்.",
+        "இந்த ஊரின் பெயர் 'அரக்' என்று தொடங்கி 'கோணம்' என்று முடியும்."
+      ],
+      "answers": [
+        "அரக்கோணம்",
+        "Arakkonam",
+        "Arakonam",
+        "Arkonam",
+        "அரக்கோணம் சந்திப்பு"
+      ],
+      "fun_fact": "தேசிய பேரிடர் மீட்புப் படையின் ஒரு பட்டாலியன் அரக்கோணத்தில் உள்ளது.",
+      "welcome": null,
+      "greeting": null
+    }
+  },
+  {
+    "place_id": "state_tamil_nadu",
+    "place_name": "Tamil Nadu",
+    "language": "ta-IN",
+    "created_at": "2026-11-22T08:37:53.391Z",
+    "model_output": {
+      "place_id": "state_tamil_nadu",
+      "type": "region",
+      "prompt": "தமிழ்நாட்டின் தலைநகரம் எது?",
+      "clues": [],
+      "answers": [
+        "சென்னை",
+        "Chennai",
+        "மெட்ராஸ்",
+        "Madras"
+      ],
+      "fun_fact": "சென்னையின் மெரினா கடற்கரை உலகின் மிக நீளமான நகர்ப்புறக் கடற்கரைகளில் ஒன்று.",
+      "welcome": "தமிழ்நாட்டுக்கு உங்களை அன்புடன் வரவேற்கிறோம்!",
+      "greeting": "வணக்கம்!"
+    }
+  },
+  {
+    "place_id": null,
+    "place_name": null,
+    "language": "ta-IN",
+    "created_at": "2026-11-22T08:37:53.391Z",
+    "model_output": {
+      "place_id": null,
+      "type": "trivia",
+      "prompt": "1983 ஆம் ஆண்டு கிரிக்கெட் உலகக் கோப்பையை வென்ற இந்திய அணியின் கேப்டன் யார்?",
+      "clues": [],
+      "answers": [
+        "கபில் தேவ்",
+        "Kapil Dev",
+        "கபில்",
+        "Kapil"
+      ],
+      "fun_fact": "அந்த இறுதிப் போட்டி லண்டனின் லார்ட்ஸ் மைதானத்தில் நடந்தது.",
+      "welcome": null,
+      "greeting": null
+    }
+  },
+  {
+    "place_id": null,
+    "place_name": null,
+    "language": "ta-IN",
+    "created_at": "2026-11-22T08:37:53.391Z",
+    "model_output": {
+      "place_id": null,
+      "type": "trivia",
+      "prompt": "ஹைதராபாத் நகரம் எந்த அரிசி உணவுக்கு மிகவும் புகழ் பெற்றது?",
+      "clues": [],
+      "answers": [
+        "பிரியாணி",
+        "Biryani",
+        "Biriyani",
+        "Briyani",
+        "ஹைதராபாதி பிரியாணி"
+      ],
+      "fun_fact": "ஹைதராபாதி பிரியாணி பெரும்பாலும் 'தம்' முறையில் மெதுவாகச் சமைக்கப்படுகிறது.",
+      "welcome": null,
+      "greeting": null
+    }
+  },
+  {
+    "place_id": null,
+    "place_name": null,
+    "language": "hi-IN",
+    "created_at": "2026-11-22T08:42:12.140Z",
+    "model_output": {
+      "place_id": null,
+      "type": "trivia",
+      "prompt": "उन्नीस सौ तिरासी में भारत ने पहला क्रिकेट विश्व कप किस कप्तान की अगुवाई में जीता था?",
+      "clues": [],
+      "answers": [
+        "कपिल देव",
+        "Kapil Dev",
+        "कपिल",
+        "Kapil"
+      ],
+      "fun_fact": "फ़ाइनल में भारत ने लॉर्ड्स के मैदान पर वेस्ट इंडीज़ को हराया था।",
+      "welcome": null,
+      "greeting": null
+    }
+  },
+  {
+    "place_id": null,
+    "place_name": null,
+    "language": "hi-IN",
+    "created_at": "2026-11-22T08:42:12.140Z",
+    "model_output": {
+      "place_id": null,
+      "type": "trivia",
+      "prompt": "फ़िल्म शोले में गब्बर सिंह का मशहूर किरदार किस अभिनेता ने निभाया था?",
+      "clues": [],
+      "answers": [
+        "अमजद ख़ान",
+        "Amjad Khan",
+        "अमजद खान",
+        "अमजद",
+        "Amjad"
+      ],
+      "fun_fact": "शोले सन उन्नीस सौ पचहत्तर में रिलीज़ हुई थी और आज भी इसके डायलॉग लोगों को याद हैं।",
+      "welcome": null,
+      "greeting": null
+    }
+  },
+  {
+    "place_id": null,
+    "place_name": null,
+    "language": "hi-IN",
+    "created_at": "2026-11-22T08:42:12.140Z",
+    "model_output": {
+      "place_id": null,
+      "type": "trivia",
+      "prompt": "इडली और डोसे के साथ परोसी जाने वाली दाल और सब्ज़ियों से बनी खट्टी-तीखी चीज़ को क्या कहते हैं?",
+      "clues": [],
+      "answers": [
+        "सांभर",
+        "Sambar",
+        "साम्भर",
+        "Sambhar"
+      ],
+      "fun_fact": "सांभर में खटास के लिए आमतौर पर इमली डाली जाती है।",
+      "welcome": null,
+      "greeting": null
+    }
+  },
+  {
+    "place_id": null,
+    "place_name": null,
+    "language": "hi-IN",
+    "created_at": "2026-11-22T08:42:12.140Z",
+    "model_output": {
+      "place_id": null,
+      "type": "trivia",
+      "prompt": "भारत के अंदर बहने वाली सबसे लंबी नदी कौन सी है?",
+      "clues": [],
+      "answers": [
+        "गंगा",
+        "Ganga",
+        "Ganges",
+        "गंगा नदी"
+      ],
+      "fun_fact": "गंगा उत्तराखंड के गंगोत्री ग्लेशियर से निकलती है।",
+      "welcome": null,
+      "greeting": null
+    }
+  },
+  {
+    "place_id": null,
+    "place_name": null,
+    "language": "hi-IN",
+    "created_at": "2026-11-22T08:42:12.140Z",
+    "model_output": {
+      "place_id": null,
+      "type": "trivia",
+      "prompt": "किस राज्य को 'गॉड्स ओन कंट्री' यानी भगवान का अपना देश कहा जाता है?",
+      "clues": [],
+      "answers": [
+        "केरल",
+        "Kerala",
+        "Keral"
+      ],
+      "fun_fact": "केरल अपने बैकवॉटर और नारियल के पेड़ों के लिए मशहूर है।",
+      "welcome": null,
+      "greeting": null
+    }
+  }
+]

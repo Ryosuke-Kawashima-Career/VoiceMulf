@@ -68,6 +68,30 @@ export async function searchPlaces(q: string, near: { lat: number; lon: number }
   return places;
 }
 
+export interface ReversePlace {
+  osm_type: string;
+  osm_id: number;
+  lat: string;
+  lon: string;
+  name: string;
+  addresstype: string;
+  namedetails?: Record<string, string>;
+  address?: { state?: string };
+}
+
+/** Reverse lookup at town/city level (zoom 10), 1 request/s like all Nominatim calls. */
+export async function reverseGeocode(lat: number, lon: number): Promise<ReversePlace | null> {
+  const params = new URLSearchParams({
+    format: "jsonv2",
+    lat: lat.toFixed(5),
+    lon: lon.toFixed(5),
+    zoom: "10",
+    namedetails: "1",
+  });
+  const r = await getJson<ReversePlace & { error?: string }>(`${NOMINATIM}/reverse?${params}`, true);
+  return r.error ? null : r;
+}
+
 export interface OsrmRoute {
   distance: number;
   duration: number;

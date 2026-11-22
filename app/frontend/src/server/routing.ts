@@ -26,13 +26,13 @@ interface PlaceList {
 const R = 6371000;
 const rad = (x: number) => (x * Math.PI) / 180;
 
-function haversine(a: [number, number], b: [number, number]): number {
+export function haversine(a: [number, number], b: [number, number]): number {
   const s = Math.sin(rad(b[0] - a[0]) / 2) ** 2 + Math.cos(rad(a[0])) * Math.cos(rad(b[0])) * Math.sin(rad(b[1] - a[1]) / 2) ** 2;
   return 2 * R * Math.asin(Math.sqrt(s));
 }
 
 /** Nearest point of the path to p: distance from the path and distance along it. */
-function nearestOnPath(p: [number, number], pts: [number, number][], dists: number[]) {
+export function nearestOnPath(p: [number, number], pts: [number, number][], dists: number[]) {
   const k = Math.cos(rad(p[0]));
   const toXY = (q: [number, number]) => [rad(q[1]) * k * R, rad(q[0]) * R];
   const [px, py] = toXY(p);

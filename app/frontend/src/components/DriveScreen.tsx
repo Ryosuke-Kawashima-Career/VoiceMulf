@@ -15,7 +15,7 @@ interface Props {
 
 function stateLabel(s: Snapshot): string {
   if (s.phase === "PAUSED") return "Paused";
-  if (s.phase === "JUDGE") return "Checking";
+  if (s.phase === "JUDGE" || (s.phase === "AGENT" && !s.speaking)) return "Checking";
   if (s.listening) return "Listening";
   if (s.speaking && s.channel === "quiz") return "Asking";
   return "";
@@ -53,6 +53,7 @@ export function DriveScreen({ engine, s }: Props) {
             progress={s.progress}
             nextManeuver={s.nextManeuver}
             zone={s.zone}
+            placesVersion={s.placesVersion}
           />
           <NextTurnStrip
             maneuver={s.nextManeuver >= 0 ? route.maneuvers[s.nextManeuver] : null}

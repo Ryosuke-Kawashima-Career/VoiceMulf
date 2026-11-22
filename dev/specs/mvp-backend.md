@@ -50,12 +50,15 @@ JSON files  app/data/  (questions, places, generated questions)
 - **Route:** OSRM driving profile with steps. Instructions are built from templates in Hindi, Tamil and English, and steps that need no action are dropped. Landmarks and regions from `places.json` are attached with `at_m`.
 - **TTS:** one Murf Falcon voice per language; the voice IDs live in one config map.
 
-### 3.2 Places along the route (new)
+### 3.2 Places along the route
 Feeds the route quizzes in 4.3, so routes outside the curated list still get landmark and region quizzes.
-- When `/api/route` builds a route, one **Overpass API** query finds `place=city` and `place=town` nodes within 3 km of a simplified route line.
-- Cities become **regions** (5 km radius) and towns become **landmarks**. Both get `at_m` the same way curated places do and are marked `source: "osm"`.
-- A curated `places.json` item wins when it is within 5 km of a found place.
-- If Overpass fails, the route is returned with curated places only.
+- Found in the background quiz call (4.3), not while the route is planned, because the public servers can take 20+ seconds.
+- **Source 1:** one **Overpass API** query for `place=city` and `place=town` nodes in the route's bounding box, kept if within 3 km of the route (15 s timeout).
+- **Source 2 (fallback):** **Nominatim reverse lookups** at town/city level, sampled along the route every 12 km (at most 15 lookups, 1 per second). This also detects **state crossings**.
+- Cities and newly entered states become **regions**; towns (and taluks from the fallback) become **landmarks**. They get `at_m` the same way curated places do and are marked `source: "osm"`. Regions get a default welcome line until the agent writes one.
+- A curated `places.json` item wins over a found place within 5 km of it or with the same name.
+- At most 8 found places per route, spread along it.
+- If both sources fail, the route keeps its curated places only.
 
 ---
 
@@ -104,16 +107,22 @@ Feeds the route quizzes in 4.3, so routes outside the curated list still get lan
 
 **Speech:** the frontend speaks the reply as host speech. It may play inside the "directions first" zone because it answers the driver, and directions still interrupt it.
 
-**On error or timeout (3 s):** the frontend speaks a fixed "Sorry, I didn't catch that" line in the chosen language.
+**On error or timeout (8 s):** the frontend speaks a fixed "Sorry, I didn't catch that" line in the chosen language.
+
+**Mic note:** the driver can only be heard while the mic is open (OFFER, IDLE, LISTEN). At a city start the first offer waits for the "directions first" zone, so a question is answered once the mic opens.
 
 ### 4.3 Quizzes from the route: `POST /api/agent/quiz`
 **When:** right after Start, in the background. It must not delay the greeting or the first offer.
 
-**Request:** `language`, the route's places that have no curated question (`{ id, name, kind: "landmark" | "region" }`), and `trivia_count` (default 5).
+**Request:** `language`, the route `path` (null in quiz-only mode) and `trivia_count` (default 5). The backend finds the places itself (3.2).
 
-**Response:** a list of questions in the existing format (frontend spec 3.2), with `source: "generated"`:
+**Response:** the found `landmarks` and `regions` that got a question (with `at_m` / `enter_at_m`), the `questions`, and `stats` (places source, counts, time, errors). The frontend adds the places to the route and the questions to its pool.
+
+**Questions**
+
+Questions use the existing format (frontend spec 3.2), with `source: "generated"`:
 - Landmark: a prompt and up to 2 clues, hardest first.
-- Region: one easy question.
+- Region: one easy question, plus a welcome line and the local greeting written in the chosen language's script.
 - Trivia: short factual questions (cricket, cinema, food, geography).
 
 **Content rules**
@@ -125,14 +134,15 @@ Feeds the route quizzes in 4.3, so routes outside the curated list still get lan
 
 **Storage and use**
 - Generated questions are appended to `app/data/generated-questions.json` with the place, language and time, so a human can fact-check and reuse them.
+- A place that already has a generated question in that language is reused from the file, not generated again.
 - Curated questions always win. Generated ones fill only places without a curated question.
 - On failure: curated and seed questions only.
 
 ### 4.4 Latency
 | Step | Target |
 |---|---|
-| End of driver speech to start of the agent's spoken reply | < 1.5 s |
-| Quiz generation | background, done before the first route trigger where possible |
+| End of driver speech to start of the agent's spoken reply | < 1.5 s (measured: 1.7–5.2 s on Claude Opus 5.5, about 2 s for most trip questions) |
+| Quiz generation | background, done before the first route trigger where possible (measured: 17–60 s) |
 
 ---
 
@@ -161,15 +171,15 @@ Feeds the route quizzes in 4.3, so routes outside the curated list still get lan
 ---
 
 ## 8. Risks and open questions
-- Opus 5.5 latency for live voice turns needs measuring against the 1.5 s target. Switching models is a `CLAUDE_MODEL` change.
+- Opus 5.5 latency for live voice turns is above the 1.5 s target (see 4.4). Switching models is a `CLAUDE_MODEL` change.
 - Generated facts are unchecked until someone reviews the saved file.
-- Overpass, Nominatim and the OSRM demo server are public services with usage limits and no uptime guarantee.
+- Overpass, Nominatim and the OSRM demo server are public services with usage limits and no uptime guarantee. During the build all public Overpass servers were failing, so the Nominatim fallback carried the place search.
 
 ---
 
 ## 9. Build order
 1. Add `ANTHROPIC_API_KEY` to `.env` and install `@anthropic-ai/sdk`.
 2. `/api/agent/turn` and the engine wiring for trip questions.
-3. Overpass places in `/api/route`.
+3. Places along the route (Overpass, Nominatim fallback).
 4. `/api/agent/quiz`, the merge into the route and the review file.
 5. Rehearse the demo end to end.

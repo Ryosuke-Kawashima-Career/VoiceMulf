@@ -9,6 +9,8 @@ export interface Question {
   clues?: string[];
   answers: string[];
   fun_fact: string;
+  /** "generated" = written by the Voice AI Agent, not yet fact-checked. */
+  source?: "generated";
 }
 
 export type ManeuverIcon = "left" | "right" | "exit" | "roundabout" | "straight" | "arrive";
@@ -27,6 +29,8 @@ export interface Landmark {
   lat: number;
   lon: number;
   question_id: string;
+  /** "osm" = found along the route by the backend; otherwise from places.json. */
+  source?: "osm";
 }
 
 export interface Region {
@@ -35,6 +39,7 @@ export interface Region {
   welcome: Localized;
   greeting: Localized;
   question_id: string;
+  source?: "osm";
 }
 
 export interface Route {

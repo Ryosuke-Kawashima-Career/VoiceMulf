@@ -18,12 +18,11 @@ Create `.env` in the project root (never committed):
 
 ```
 MURF_API_KEY=...
-ANTHROPIC_API_KEY=...   # needed once the Voice AI Agent is built (see backend spec)
+ANTHROPIC_API_KEY=...   # Voice AI Agent (trip questions, generated quizzes)
+CLAUDE_MODEL=...        # optional, default claude-opus-5-5
 ```
 
 ## Layout
 
 - `app/frontend` – Next.js app (UI and API route handlers)
 - `app/data` – questions and the curated place list
-- `dev/specs/mvp-driver-quiz-frontend.md` – frontend spec
-- `dev/specs/mvp-backend.md` – backend spec (map navigation, Voice AI Agent)
