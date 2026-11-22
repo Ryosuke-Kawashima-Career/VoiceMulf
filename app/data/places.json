@@ -1,0 +1,90 @@
+{
+  "landmarks": [
+    {
+      "id": "ramanagara",
+      "name": { "en-IN": "Ramanagara hills", "hi-IN": "रामनगर की पहाड़ियाँ", "ta-IN": "ராமநகர மலைகள்" },
+      "lat": 12.7225,
+      "lon": 77.281,
+      "question_id": "lm_ramanagara"
+    },
+    {
+      "id": "channapatna",
+      "name": { "en-IN": "Channapatna", "hi-IN": "चन्नपटना", "ta-IN": "சென்னப்பட்டணா" },
+      "lat": 12.6518,
+      "lon": 77.2089,
+      "question_id": "lm_channapatna"
+    },
+    {
+      "id": "maddur",
+      "name": { "en-IN": "Maddur", "hi-IN": "मद्दूर", "ta-IN": "மத்தூர்" },
+      "lat": 12.5843,
+      "lon": 77.0436,
+      "question_id": "lm_maddur"
+    },
+    {
+      "id": "srirangapatna",
+      "name": { "en-IN": "Srirangapatna", "hi-IN": "श्रीरंगपट्टन", "ta-IN": "ஸ்ரீரங்கப்பட்டணம்" },
+      "lat": 12.4216,
+      "lon": 76.6932,
+      "question_id": "lm_srirangapatna"
+    }
+  ],
+  "regions": [
+    {
+      "id": "mandya",
+      "name": { "en-IN": "Mandya", "hi-IN": "मंड्या", "ta-IN": "மண்டியா" },
+      "lat": 12.5223,
+      "lon": 76.8975,
+      "radius_m": 4000,
+      "welcome": {
+        "en-IN": "Welcome to Mandya, the sugar city.",
+        "hi-IN": "चीनी के शहर मंड्या में आपका स्वागत है।",
+        "ta-IN": "சர்க்கரை நகரமான மண்டியாவுக்கு வரவேற்கிறோம்."
+      },
+      "greeting": { "en-IN": "Namaskara!", "hi-IN": "नमस्कार!", "ta-IN": "நமஸ்காரா!" },
+      "question_id": "rg_mandya"
+    },
+    {
+      "id": "mysuru",
+      "name": { "en-IN": "Mysuru", "hi-IN": "मैसूरु", "ta-IN": "மைசூரு" },
+      "lat": 12.3052,
+      "lon": 76.6552,
+      "radius_m": 9000,
+      "welcome": {
+        "en-IN": "Welcome to Mysuru, the city of palaces.",
+        "hi-IN": "महलों के शहर मैसूरु में आपका स्वागत है।",
+        "ta-IN": "அரண்மனைகளின் நகரமான மைசூருவுக்கு வரவேற்கிறோம்."
+      },
+      "greeting": { "en-IN": "Namaskara!", "hi-IN": "नमस्कार!", "ta-IN": "நமஸ்காரா!" },
+      "question_id": "rg_mysuru"
+    },
+    {
+      "id": "chennai",
+      "name": { "en-IN": "Chennai", "hi-IN": "चेन्नई", "ta-IN": "சென்னை" },
+      "lat": 13.0827,
+      "lon": 80.2707,
+      "radius_m": 15000,
+      "welcome": {
+        "en-IN": "Welcome to Chennai, the capital of Tamil Nadu.",
+        "hi-IN": "तमिलनाडु की राजधानी चेन्नई में आपका स्वागत है।",
+        "ta-IN": "தமிழ்நாட்டின் தலைநகரான சென்னைக்கு வரவேற்கிறோம்."
+      },
+      "greeting": { "en-IN": "Vanakkam!", "hi-IN": "वणक्कम!", "ta-IN": "வணக்கம்!" },
+      "question_id": "rg_chennai"
+    },
+    {
+      "id": "hyderabad",
+      "name": { "en-IN": "Hyderabad", "hi-IN": "हैदराबाद", "ta-IN": "ஹைதராபாத்" },
+      "lat": 17.385,
+      "lon": 78.4867,
+      "radius_m": 15000,
+      "welcome": {
+        "en-IN": "Welcome to Hyderabad, the city of pearls.",
+        "hi-IN": "मोतियों के शहर हैदराबाद में आपका स्वागत है।",
+        "ta-IN": "முத்துக்களின் நகரமான ஹைதராபாத்துக்கு வரவேற்கிறோம்."
+      },
+      "greeting": { "en-IN": "Namaskaram!", "hi-IN": "नमस्कारम!", "ta-IN": "நமஸ்காரம்!" },
+      "question_id": "rg_hyderabad"
+    }
+  ]
+}

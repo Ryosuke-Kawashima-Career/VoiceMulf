@@ -1,0 +1,12 @@
+# secrets
+.env*
+
+# dependencies and build output
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+
+# misc
+.DS_Store
+.claude/settings.local.json
